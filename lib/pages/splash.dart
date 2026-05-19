@@ -14,7 +14,7 @@ class _MyWidgetState extends State<Splash> {
       home: Scaffold(
         body: Container(
           decoration: const BoxDecoration(
-            gradient: LinearGradient(
+            gradient: LinearGradient( 
               colors: [
                 Color(0xFFFF9933),
                 Color.fromARGB(255, 255, 255, 255), // saffron
