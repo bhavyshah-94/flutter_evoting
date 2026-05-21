@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/pages/splash.dart';
+//import 'package:flutter_application_2/pages/splash.dart';
+// import 'package:flutter_application_2/pages/voting.dart';
+ import 'package:flutter_application_2/pages/fragment_placeholder.dart';
+//import 'package:flutter_application_2/pages/admin.dart';
 
 void main() {
-  runApp(const Splash());
+  runApp(MaterialApp(
+    home: FragmentPlaceholder(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
