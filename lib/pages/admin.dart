@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/pages/voting.dart';
+//import 'package:flutter_application_2/pages/voting.dart';
+import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
+//import 'listing.dart';
+//import 'fragment_placeholder.dart';
 
 class AdminPage extends StatefulWidget {
   final List<List<Object>> data;
@@ -15,6 +19,45 @@ class _AdminPageState extends State<AdminPage> {
   final TextEditingController _cityController = TextEditingController();
   final TextEditingController _partyController = TextEditingController();
   final TextEditingController _candidateController = TextEditingController();
+
+  @override 
+  void initState() {
+    super.initState();
+    loadData();
+  }
+
+  String convertDataToJson(List<List<Object>> data) {
+List<String> regions = data[0] as List<String>;
+List<String> parties = data[1] as List<String>;
+List<String> candidates = data[2] as List<String>;
+List<int> votes = data[3] as List<int>;
+
+List<Map<String, dynamic>> electionData = [];
+for (int i = 0; i < parties.length; i++) {
+  electionData.add({
+    'party': parties[i],
+    'candidate': candidates[i],
+    'votes': votes[i],
+  });
+}
+
+Map<String, dynamic> jsonData = {
+  'regions': regions,
+  'elections': electionData,
+};
+
+return jsonEncode(jsonData);
+}
+
+  Future<void> loadData() async {
+    final prefs = await SharedPreferences.getInstance();
+    try {
+      String jsonString = convertDataToJson(widget.data);
+      await prefs.setString('electionData', jsonString);
+    } catch (e) {
+      // ignore write errors for now
+    }
+  }
 
   @override
   void dispose() {
@@ -33,13 +76,17 @@ class _AdminPageState extends State<AdminPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('City added successfully!')),
       );
+    
     }
+    loadData();
   }
 
   void _deleteCity(int index) {
+    
     setState(() {
       widget.data[0].removeAt(index);
     });
+    loadData();
   }
 
   void _editCityDialog(int index) {
@@ -63,6 +110,7 @@ class _AdminPageState extends State<AdminPage> {
                   setState(() {
                     widget.data[0][index] = editCityCtrl.text.trim();
                   });
+                  loadData();
                   Navigator.pop(context);
                 }
               },
@@ -88,6 +136,7 @@ class _AdminPageState extends State<AdminPage> {
         const SnackBar(content: Text('Party & Candidate added!')),
       );
     }
+    loadData();
   }
 
   void _deleteParty(int index) {
@@ -96,6 +145,7 @@ class _AdminPageState extends State<AdminPage> {
       widget.data[2].removeAt(index);
       widget.data[3].removeAt(index);
     });
+    loadData();
   }
 
   void _editPartyDialog(int index) {
@@ -134,6 +184,7 @@ class _AdminPageState extends State<AdminPage> {
                     widget.data[1][index] = editPartyCtrl.text.trim();
                     widget.data[2][index] = editCandCtrl.text.trim();
                   });
+                  loadData();
                   Navigator.pop(context);
                 }
               },
@@ -158,14 +209,9 @@ class _AdminPageState extends State<AdminPage> {
         backgroundColor: Colors.indigoAccent,
         foregroundColor: Colors.white,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.indigoAccent),
+          icon: const Icon(Icons.arrow_back, color: Color.fromARGB(255, 255, 255, 255)),
           onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => voting(data: widget.data),
-              ),
-            );
+            Navigator.pop(context, '/listing');
           },
         ),
       ),

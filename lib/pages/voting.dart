@@ -26,7 +26,7 @@ class _votingState extends State<voting> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.indigoAccent),
           onPressed: () {
-            Navigator.pushReplacementNamed(context, '/');
+            Navigator.pop(context, '/listing');
           },
         ),
         title: const Text("Voting App"),

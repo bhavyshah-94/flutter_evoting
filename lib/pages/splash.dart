@@ -9,6 +9,14 @@ class Splash extends StatefulWidget {
 
 class _MyWidgetState extends State<Splash> {
   @override
+  void initState() {
+    super.initState();
+    Future.delayed(const Duration(seconds: 2), () {
+      Navigator.pushReplacementNamed(context, '/login');
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
@@ -66,12 +74,6 @@ class _MyWidgetState extends State<Splash> {
                   SizedBox(height: 200),
                   CircularProgressIndicator(
                     color: const Color.fromARGB(255, 105, 140, 246),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.pushReplacementNamed(context, '/');
-                    },
-                    child: Text("Go to Home"),
                   ),
                   SizedBox(height: 60),
                   Align(
